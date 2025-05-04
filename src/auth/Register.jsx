@@ -8,7 +8,7 @@ const validateForm = Yup.object({
   password: Yup.string()
     .min(6, "mot de passe doit contenir au moins 6 caractères")
     .required("mot de passe obligatoire"),
-  confirm: Yup.string().required("les mots de passe doivent être conforme"),
+  confirmer: Yup.string().required("les mots de passe doivent être conforme"),
 });
 const Register = () => {
   const initialValue = {
@@ -16,7 +16,7 @@ const Register = () => {
     prenom: "",
     email: "",
     password: "",
-    confirm: "",
+    confirmer: "",
     dateCreation: "",
   };
   const handleSubmit = (values) => {
@@ -77,6 +77,7 @@ const Register = () => {
 
             <button
               type="submit"
+              onSubmit={handleSubmit}
               className="w-full bg-primaryColor text-white py-2 rounded-md hover:bg-primaryColor/90 transition"
             >
               S'inscrire
