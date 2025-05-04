@@ -16,7 +16,7 @@ const Register = () => {
     prenom: "",
     email: "",
     password: "",
-    confirmer: "",
+    confirm: "",
     dateCreation: "",
   };
   const handleSubmit = (values) => {
