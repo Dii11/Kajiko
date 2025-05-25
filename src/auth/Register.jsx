@@ -1,113 +1,93 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import * as Yup from "yup";
-import { UseAdd } from "../hook/UseCustomHook.js";
+import React from 'react';
+import { Formik, Form } from 'formik';
+import RegisterForm from './RegisterForm';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const validateForm = Yup.object({
-  nom: Yup.string().required("Le nom est obligatoire"),
-  prenom: Yup.string().required("Le prénom est obligatoire"),
-  email: Yup.string().email("Adresse email invalide").required("L'email est obligatoire"),
-  password: Yup.string()
-    .min(6, "Le mot de passe doit contenir au moins 6 caractères")
-    .required("Le mot de passe est obligatoire"),
-  confirmer: Yup.string()
-    .oneOf([Yup.ref('password'), null], "Les mots de passe doivent correspondre")
-    .required("La confirmation du mot de passe est obligatoire"),
-});
+const API_URL = import.meta.env.VITE_API_URL;
+
+const validate = values => {
+  const errors = {};
+  if (!values.email) {
+    errors.email = 'Email requis';
+  } else if (
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+  ) {
+    errors.email = 'Adresse email invalide';
+  }
+  if (!values.password) {
+    errors.password = 'Mot de passe requis';
+  } else if (values.password.length < 6) {
+    errors.password = '6 caractères minimum';
+  }
+  if (!values.confirmPassword) {
+    errors.confirmPassword = 'Confirmation requise';
+  } else if (values.password !== values.confirmPassword) {
+    errors.confirmPassword = 'Les mots de passe ne correspondent pas';
+  }
+  return errors;
+};
 
 const Register = () => {
   const navigate = useNavigate();
-  const api = "http://localhost:3001"
-  const REGISTER_ENDPOINT = "/auth/register";
-
-  const handleSubmit = async (values, { resetForm }) => {
-    console.log(api)
-
-    try {
-      const response = await UseAdd({ url: `${api}${REGISTER_ENDPOINT}`, data: values });
-      resetForm();
-      navigate('/login');
-    } catch (error) {
-      console.error("Erreur lors de l'inscription:", error);
-    }
-  };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-primaryColor ">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-primaryColor">
-          Créer un compte
-        </h2>
+    <div   data-theme="lemonade" className="
+  
+    flex items-center justify-center min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-primary/10">
+      <div className="w-full max-w-md p-8 bg-base-100 rounded-2xl shadow-2xl border border-base-300">
+        <h2 className="text-3xl font-bold text-center mb-6 text-primary">Créer un compte</h2>
         <Formik
-          initialValues={{ nom: "", prenom: "", email: "", password: "", confirmer: "" }}
-          validationSchema={validateForm}
-          onSubmit={handleSubmit}
+          initialValues={{ email: '', password: '', confirmPassword: '' }}
+          validate={validate}
+          onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
+            setStatus(null);
+            try {
+              console.log('Données envoyées à l\'API:', {
+                email: values.email,
+                password: values.password,
+              });
+              const response = await axios.post(`${API_URL}/api/register`, {
+                email: values.email,
+                password: values.password,
+              });
+              setStatus({ success: response.data.message });
+              resetForm();
+              setTimeout(() => {
+                navigate('/login');
+              }, 1500);
+            } catch (err) {
+              setStatus({
+                error:
+                  err.response?.data?.error ||
+                  "Erreur lors de l'inscription",
+              });
+            }
+            setSubmitting(false);
+          }}
         >
-          {({ isSubmitting }) => (
-            <Form className="space-y-4">
-              <div>
-                <label htmlFor="nom" className="block mb-1 text-gray-600">Nom</label>
-                <Field type='text' name='nom' id='nom' className='w-full px-4 py-2 border rounded-md focus:outline-none'/>
-                <ErrorMessage name="nom" component="div" className="text-red-500 text-sm mt-1" />
+          {({ isSubmitting, status }) => (
+            <Form className="space-y-5">
+              <RegisterForm isSubmitting={isSubmitting} />
+              {status && status.success && (
+                <div className="alert alert-success mt-4">{status.success}</div>
+              )}
+              {status && status.error && (
+                <div className="alert alert-error mt-4">{status.error}</div>
+              )}
+              <div className="text-center mt-4">
+                <span>Déjà un compte ? </span>
+                <button
+                  type="button"
+                  className="link link-primary"
+                  onClick={() => navigate('/login')}
+                >
+                  Se connecter
+                </button>
               </div>
-              <div>
-                <label htmlFor="prenom" className="block mb-1 text-gray-600">Prénom</label>
-                <Field
-                  type="text"
-                  name="prenom"
-                  id="prenom"
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-primaryColor"
-                />
-                <ErrorMessage name="prenom" component="div" className="text-red-500 text-sm mt-1" />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block mb-1 text-gray-600">Email</label>
-                <Field
-                  type="email"
-                  name="email"
-                  id="email"
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-primaryColor"
-                />
-                <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block mb-1 text-gray-600">Mot de passe</label>
-                <Field
-                  type="password"
-                  name="password"
-                  id="password"
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-primaryColor"
-                />
-                <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
-              </div>
-
-              <div>
-                <label htmlFor="confirmer" className="block mb-1 text-gray-600">Confirmer le mot de passe</label>
-                <Field
-                  type="password"
-                  name="confirmer"
-                  id="confirmer"
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-primaryColor"
-                />
-                <ErrorMessage name="confirmer" component="div" className="text-red-500 text-sm mt-1" />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-primaryColor text-white py-2 rounded-md hover:bg-primaryColor/90 transition"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Inscription...' : 'S\'inscrire'}
-              </button>
             </Form>
           )}
         </Formik>
-        <p className="text-sm text-center mt-4">
-          Vous avez déjà un compte ? <a href="/login" className="text-primaryColor hover:underline">Se connecter</a>
-        </p>
       </div>
     </div>
   );

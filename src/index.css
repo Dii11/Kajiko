@@ -4,4 +4,6 @@
     --color-secondaryColor:#B7FF7C;
     --font-font:"Manrope","Montserrat","roboto"
  }
- 
+@plugin "daisyui" {
+  themes: all;
+}
