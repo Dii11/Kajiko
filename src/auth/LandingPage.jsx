@@ -1,8 +1,7 @@
 import React from "react";
 import chart from "../assets/chart.png";
-import fond from "../assets/fond.jpg";
+import fond from "../assets/fond .webp";
 import save from "../assets/save.png";
-import * as motion from "motion/react-client";
 const LandingPage = () => {
   return (
     <div className="flex flex-col max-h-full gap-10 py-2 ">

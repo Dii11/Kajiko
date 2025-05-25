@@ -1,108 +1,97 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-// Variable d’environnement VITE
-const API_URL ="http://localhost:3001"
+const API_URL = import.meta.env.VITE_API_URL;
 
-// Schéma de validation avec Yup
-const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Adresse e-mail invalide')
-    .required("L'e-mail est requis"),
-  password: Yup.string()
-    .min(6, 'Le mot de passe doit contenir au moins 6 caractères')
-    .required('Le mot de passe est requis'),
-});
+const validate = values => {
+  const errors = {};
+  if (!values.email) {
+    errors.email = 'Email requis';
+  } else if (
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+  ) {
+    errors.email = 'Adresse email invalide';
+  }
+  if (!values.password) {
+    errors.password = 'Mot de passe requis';
+  }
+  return errors;
+};
 
-const LoginForm = () => {
-  const [serverError, setServerError] = useState("");
+const Login = () => {
+  const navigate = useNavigate();
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-        <h1 className="text-gray-700 text-center font-bold mb-6 text-xl">Connexion</h1>
-
-        {serverError && (
-          <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm text-center">
-            {serverError}
-          </div>
-        )}
-
+    <div className="flex items-center justify-center min-h-screen bg-base-200">
+      <div className="w-full max-w-sm p-8 bg-base-100 rounded-2xl shadow-xl">
+        <h2 className="text-3xl font-bold text-center mb-6">Connexion</h2>
         <Formik
           initialValues={{ email: '', password: '' }}
-          validationSchema={LoginSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            setServerError(""); // Reset erreur
+          validate={validate}
+          onSubmit={async (values, { setSubmitting, setStatus }) => {
+            setStatus(null);
             try {
-              const response = await fetch(`${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(values),
+              const response = await axios.post(`${API_URL}/api/login`, {
+                email: values.email,
+                password: values.password,
               });
-
-              const data = await response.json();
-
-              if (!response.ok) {
-                setServerError(data.message || "Erreur lors de la connexion");
-              } else {
-                // ✅ Stocker token + redirection (optionnelle)
-                localStorage.setItem('token', data.token);
-                alert("Connexion réussie !");
-                // window.location.href = "/dashboard"; // redirection possible
-              }
-            } catch (error) {
-              setServerError("Erreur de connexion au serveur");
-            } finally {
-              setSubmitting(false);
+              // Stocker le token JWT
+              localStorage.setItem('token', response.data.token);
+              setStatus({ success: 'Connexion réussie !' });
+              setTimeout(() => {
+                navigate('/'); // Redirigez où vous voulez après connexion
+              }, 1000);
+            } catch (err) {
+              setStatus({
+                error:
+                  err.response?.data?.error ||
+                  "Erreur lors de la connexion",
+              });
             }
+            setSubmitting(false);
           }}
         >
-          {({ isSubmitting }) => (
-            <Form className="space-y-4">
+          {({ isSubmitting, status }) => (
+            <Form className="space-y-5">
               <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                  E-mail
+                <label className="label">
+                  <span className="label-text">Email</span>
                 </label>
                 <Field
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="email"
                   type="email"
                   name="email"
-                  placeholder="Votre e-mail"
+                  className="input input-bordered w-full"
+                  autoComplete="username"
                 />
-                <ErrorMessage name="email" component="p" className="text-red-500 text-xs italic" />
+                <ErrorMessage name="email" component="div" className="text-error text-sm" />
               </div>
-
               <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                  Mot de passe
+                <label className="label">
+                  <span className="label-text">Mot de passe</span>
                 </label>
                 <Field
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="password"
                   type="password"
                   name="password"
-                  placeholder="Votre mot de passe"
+                  className="input input-bordered w-full"
+                  autoComplete="current-password"
                 />
-                <ErrorMessage name="password" component="p" className="text-red-500 text-xs italic" />
+                <ErrorMessage name="password" component="div" className="text-error text-sm" />
               </div>
-
-              <div className="flex items-center justify-between">
-                <button
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Connexion..." : "Se connecter"}
-                </button>
-                <a
-                  className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-                  href="#"
-                >
-                  Mot de passe oublié ?
-                </a>
-              </div>
+              <button
+                type="submit"
+                className="btn btn-primary w-full"
+                disabled={isSubmitting}
+              >
+                Se connecter
+              </button>
+              {status && status.success && (
+                <div className="alert alert-success mt-4">{status.success}</div>
+              )}
+              {status && status.error && (
+                <div className="alert alert-error mt-4">{status.error}</div>
+              )}
             </Form>
           )}
         </Formik>
@@ -111,4 +100,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default Login;
