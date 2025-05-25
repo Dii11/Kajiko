@@ -32,48 +32,63 @@ const Register = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-base-200">
-      <Formik
-        initialValues={{ email: '', password: '', confirmPassword: '' }}
-        validate={validate}
-        onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
-          setStatus(null);
-          try {
-            console.log('Données envoyées à l\'API:', {
-              email: values.email,
-              password: values.password,
-            });
-            const response = await axios.post(`${API_URL}/api/register`, {
-              email: values.email,
-              password: values.password,
-            });
-            setStatus({ success: response.data.message });
-            resetForm();
-            setTimeout(() => {
-              navigate('/login');
-            }, 1500);
-          } catch (err) {
-            setStatus({
-              error:
-                err.response?.data?.error ||
-                "Erreur lors de l'inscription",
-            });
-          }
-          setSubmitting(false);
-        }}
-      >
-        {({ isSubmitting, status }) => (
-          <Form>
-            <RegisterForm isSubmitting={isSubmitting} />
-            {status && status.success && (
-              <div className="alert alert-success mt-4">{status.success}</div>
-            )}
-            {status && status.error && (
-              <div className="alert alert-error mt-4">{status.error}</div>
-            )}
-          </Form>
-        )}
-      </Formik>
+    <div   data-theme="lemonade" className="
+  
+    flex items-center justify-center min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-primary/10">
+      <div className="w-full max-w-md p-8 bg-base-100 rounded-2xl shadow-2xl border border-base-300">
+        <h2 className="text-3xl font-bold text-center mb-6 text-primary">Créer un compte</h2>
+        <Formik
+          initialValues={{ email: '', password: '', confirmPassword: '' }}
+          validate={validate}
+          onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
+            setStatus(null);
+            try {
+              console.log('Données envoyées à l\'API:', {
+                email: values.email,
+                password: values.password,
+              });
+              const response = await axios.post(`${API_URL}/api/register`, {
+                email: values.email,
+                password: values.password,
+              });
+              setStatus({ success: response.data.message });
+              resetForm();
+              setTimeout(() => {
+                navigate('/login');
+              }, 1500);
+            } catch (err) {
+              setStatus({
+                error:
+                  err.response?.data?.error ||
+                  "Erreur lors de l'inscription",
+              });
+            }
+            setSubmitting(false);
+          }}
+        >
+          {({ isSubmitting, status }) => (
+            <Form className="space-y-5">
+              <RegisterForm isSubmitting={isSubmitting} />
+              {status && status.success && (
+                <div className="alert alert-success mt-4">{status.success}</div>
+              )}
+              {status && status.error && (
+                <div className="alert alert-error mt-4">{status.error}</div>
+              )}
+              <div className="text-center mt-4">
+                <span>Déjà un compte ? </span>
+                <button
+                  type="button"
+                  className="link link-primary"
+                  onClick={() => navigate('/login')}
+                >
+                  Se connecter
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };

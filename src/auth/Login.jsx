@@ -92,6 +92,16 @@ const Login = () => {
               {status && status.error && (
                 <div className="alert alert-error mt-4">{status.error}</div>
               )}
+              <div className="text-center mt-4">
+                <span>Pas de compte ? </span>
+                <button
+                  type="button"
+                  className="link link-primary"
+                  onClick={() => navigate('/register')}
+                >
+                  Créer un compte
+                </button>
+              </div>
             </Form>
           )}
         </Formik>
