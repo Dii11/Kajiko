@@ -57,6 +57,27 @@ const RegisterForm = ({ isSubmitting }) => (
         </div>
         <ErrorMessage name="confirmPassword" component="div" className="text-error text-sm" />
       </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Nom</span>
+        </label>
+        <Field name="nom" placeholder="Nom" className="input input-bordered w-full" />
+        <ErrorMessage name="nom" component="div" className="text-error text-sm" />
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Prénom</span>
+        </label>
+        <Field name="prenom" placeholder="Prénom" className="input input-bordered w-full" />
+        <ErrorMessage name="prenom" component="div" className="text-error text-sm" />
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Téléphone</span>
+        </label>
+        <Field name="telephone" placeholder="Téléphone" className="input input-bordered w-full" />
+        <ErrorMessage name="telephone" component="div" className="text-error text-sm" />
+      </div>
       <button
         type="submit"
         className="btn btn-primary w-full"
