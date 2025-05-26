@@ -10,7 +10,7 @@ import Profile from '../modules/profil/Profile';
 
 const UserHome = () => (
   <div className="flex min-h-screen bg-base-200">
-    <div className="flex-1 flex flex-col">
+    <div className=" flex-1 flex flex-col">
       <Navbar />
       <main className="flex-1 p-6">
         <Routes>

@@ -50,7 +50,7 @@ const Navbar = () => {
   const handleThemeChange = () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     if (currentTheme === 'night') {
-      document.documentElement.setAttribute('data-theme', 'synthwave');
+      document.documentElement.setAttribute('data-theme', 'fantasy');
     } else {
       document.documentElement.setAttribute('data-theme', 'night');
     }
@@ -63,10 +63,10 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-slate-900 shadow-lg m-4 p-4 rounded-3xl">
+    <div className="bg-slate-900 shadow-lg m-4 p-4 rounded-3xl ">
       <section className="flex justify-between rounded-lg m-4 p-5 text-secondary">
         <div>Logo</div>
-        <div className="nav flex gap-10">
+        <div className="hidden md:block nav flex gap-10">
           <NavLink
             to="/home/"
             end
