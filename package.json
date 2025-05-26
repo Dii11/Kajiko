@@ -11,28 +11,20 @@
     "start": "nodemon server.js"
   },
   "dependencies": {
-<<<<<<< HEAD
-=======
     "@reduxjs/toolkit": "^2.8.2",
->>>>>>> depense-budget
     "@tailwindcss/vite": "^4.1.5",
     "axios": "^1.9.0",
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
-<<<<<<< HEAD
-=======
     "chart.js": "^4.4.9",
->>>>>>> depense-budget
     "cors": "^2.8.5",
     "daisyui": "^5.0.37",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "formik": "^2.4.6",
+    "framer-motion": "^12.14.0",
     "jsonwebtoken": "^9.0.2",
-<<<<<<< HEAD
-=======
     "jwt-decode": "^4.0.0",
->>>>>>> depense-budget
     "lucide-react": "^0.511.0",
     "motion": "^12.9.4",
     "nodemon": "^3.1.10",

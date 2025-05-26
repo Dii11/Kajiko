@@ -142,10 +142,7 @@ const Navbar = () => {
           </NavLink>
         </div>
         <div className="flex items-center gap-5">
-          <div className="rounded-full border-accent ">
-            <Search />
-          </div>
-          <div className="rounded-full ">
+          <div className="hidden md:block rounded-full border-accent ">
             <Search />
           </div>
           <div className="rounded-full border-accent ">
