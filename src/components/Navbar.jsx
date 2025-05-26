@@ -1,14 +1,29 @@
 import { Bell, NotebookIcon, Search } from 'lucide-react';
-import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import ProfileHeadrer from '../modules/profil/ProfileHeadrer';
 import BudgetHeader from '../modules/budget/BudgetHeader';
 import CategoriesHeader from '../modules/categories/CategoriesHeader';
 import TransactioHeader from '../modules/transaction/TransactioHeader';
 import DashboardHeader from '../modules/Dashboard/DashboardHeader';
+import ReportHeader from '../modules/ReportHeader';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef();
+
+  // Fermer le menu si on clique en dehors
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Fonction pour choisir le header selon le chemin
   const renderHeader = () => {
@@ -24,8 +39,27 @@ const Navbar = () => {
     if (location.pathname.startsWith('/home/profile')) {
       return <ProfileHeadrer />;
     }
+    if (location.pathname.startsWith('/home/reports')) {
+      return <ReportHeader />;
+    }
     // Par défaut, dashboard
     return <DashboardHeader />;
+  };
+
+  // Changement de thème avec choix explicite
+  const handleThemeChange = () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    if (currentTheme === 'night') {
+      document.documentElement.setAttribute('data-theme', 'synthwave');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'night');
+    }
+  };
+
+  // Déconnexion (à adapter selon ta logique)
+  const handleLogout = () => {
+    // ...logique de déconnexion (clear token, etc)...
+    navigate('/login');
   };
 
   return (
@@ -117,10 +151,40 @@ const Navbar = () => {
           <div className="rounded-full border-accent ">
             <Bell />
           </div>
-          <div className="avatar avatar-online avatar-placeholder">
-            <div className="bg-slate-600 text-neutral-content w-10 rounded-full">
-              <span className="text-xl">AI</span>
+          {/* Avatar avec sous-menu */}
+          <div className="relative" ref={menuRef}>
+            <div
+              className="avatar avatar-online avatar-placeholder cursor-pointer"
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              <div className="bg-slate-600 text-neutral-content w-10 rounded-full flex items-center justify-center">
+                <span className="text-xl">AI</span>
+              </div>
             </div>
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-56 bg-base-100 rounded-lg shadow-lg z-50 py-2">
+                <button
+                  className="block w-full text-left px-4 py-2 hover:bg-base-200"
+                  onClick={() => { setMenuOpen(false); navigate('/home/profile'); }}
+                >
+                  Informations personnelles
+                </button>
+                <button
+                  className="block w-full text-left px-4 py-2 hover:bg-base-200"
+                  onClick={handleThemeChange}
+                >
+                  {document.documentElement.getAttribute('data-theme') === 'night'
+                    ? 'Mode clair'
+                    : 'Mode sombre'}
+                </button>
+                <button
+                  className="block w-full text-left px-4 py-2 hover:bg-base-200 text-error"
+                  onClick={handleLogout}
+                >
+                  Déconnexion
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </section>
