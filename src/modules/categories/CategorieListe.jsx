@@ -14,7 +14,7 @@ const CategorieListe = ({ onNouveauClick }) => {
   }, [dispatch, status]);
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto bg-base-100 rounded-2xl p-6">
       <div className='flex justify-between'>
 <h4>liste</h4>
 <button className="btn btn-accent mt-4" onClick={onNouveauClick}>

@@ -1,14 +1,19 @@
+import React from 'react';
+import { motion } from 'framer-motion';
 import NewCategorie from './NewCategorie';
 import CategorieList from './CategorieListe';
 
 const CategoriesHeader = () => {
-
-  
-
     return (
-        <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-4 text-primary">Liste des catégories</h2>
-            <section className="flex flex-wrap gap-4 items-center">
+        <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ duration: 0.5, type: "spring", stiffness: 60 }}
+            className="mb-6 flex justify-between items-center"
+        >
+            <h2 className="text-2xl font-bold mb-4 text-accent">Liste des catégories</h2>
+            <section className="flex gap-4 items-center">
                 <input
                     type="text"
                     placeholder="Rechercher une catégorie..."
@@ -20,7 +25,7 @@ const CategoriesHeader = () => {
                     <option value="revenu">Revenu</option>
                 </select>
             </section>
-        </div>
+        </motion.div>
     );
 };
 

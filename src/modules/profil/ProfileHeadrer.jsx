@@ -1,20 +1,35 @@
 import { Edit, Trash } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { jwtDecode } from 'jwt-decode';
+import { fetchUserByEmail } from '../../features/userSlice';
 
 const ProfileHeadrer = () => {
-    return (
-      <div className='flex justify-between'>
-        <span className="text-bold text-accent text-2xl ">
-        Bonjour, Jean
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.user.user);
 
+    useEffect(() => {
+        // Récupérer le token depuis le localStorage
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                // On suppose que l'email est dans decoded.email
+                const email = decoded.email;
+                if (email && (!user || user.email !== email)) {
+                    dispatch(fetchUserByEmail(email));
+                }
+            } catch (e) {
+                // Token invalide
+            }
+        }
+    }, [dispatch, user]);
+
+    return (
+        <span className="text-bold text-accent text-2xl ">
+          Bonjour, {user?.nom || "Utilisateur"} {user?.prenom}
         </span>
-        <div className='flex gap-2'>
-            <button className='border border-success text-sm p-2 rounded-lg'><Edit className='text-success'/></button>
-                        <button className='border border-accent text-sm p-2 rounded-lg'>
-                            <Trash className=' text-accent w-5'/>
-                        </button>
-        </div>
-      </div>
+       
     );
 };
 
