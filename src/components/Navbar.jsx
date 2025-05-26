@@ -1,9 +1,33 @@
 import { Bell, NotebookIcon, Search } from 'lucide-react';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import ProfileHeadrer from '../modules/profil/ProfileHeadrer';
+import BudgetHeader from '../modules/budget/BudgetHeader';
+import CategoriesHeader from '../modules/categories/CategoriesHeader';
+import TransactioHeader from '../modules/transaction/TransactioHeader';
+import DashboardHeader from '../modules/Dashboard/DashboardHeader';
 
 const Navbar = () => {
+  const location = useLocation();
+
+  // Fonction pour choisir le header selon le chemin
+  const renderHeader = () => {
+    if (location.pathname.startsWith('/home/transactions')) {
+      return <TransactioHeader />;
+    }
+    if (location.pathname.startsWith('/home/budget')) {
+      return <BudgetHeader />;
+    }
+    if (location.pathname.startsWith('/home/categories')) {
+      return <CategoriesHeader />;
+    }
+    if (location.pathname.startsWith('/home/profile')) {
+      return <ProfileHeadrer />;
+    }
+    // Par défaut, dashboard
+    return <DashboardHeader />;
+  };
+
   return (
     <div className="bg-slate-900 shadow-lg m-4 p-4 rounded-3xl">
       <section className="flex justify-between rounded-lg m-4 p-5 text-secondary">
@@ -21,6 +45,18 @@ const Navbar = () => {
             }
           >
             Dashboard
+          </NavLink>
+          <NavLink
+            to="/home/transactions"
+            className={({ isActive }) =>
+              `px-4 py-2 rounded-lg transition ${
+                isActive
+                  ? 'border-b-4 border-primary bg-base-200 text-primary'
+                  : 'hover:bg-base-100'
+              }`
+            }
+          >
+            Transactions
           </NavLink>
           <NavLink
             to="/home/budget"
@@ -88,9 +124,7 @@ const Navbar = () => {
           </div>
         </div>
       </section>
-      <section className="mt-10">
-        <ProfileHeadrer />
-      </section>
+      <section className="mt-10">{renderHeader()}</section>
     </div>
   );
 };

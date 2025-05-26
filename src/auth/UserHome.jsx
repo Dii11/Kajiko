@@ -2,10 +2,10 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Dashboard from '../modules/Dashboard/Dashboard';
-import Transactions from '../modules/Transactions';
-import Categories from '../modules/Categories';
+import Transactions from '../modules/transaction/Transactions';
+import Categories from '../modules/categories/Categories';
 import Reports from '../modules/Report';
-import Budget from '../modules/Budget';
+import BudgetRoutes from '../modules/budget/BudgetRoutes';
 import Profile from '../modules/profil/Profile';
 
 const UserHome = () => (
@@ -18,9 +18,11 @@ const UserHome = () => (
           <Route path="transactions" element={<Transactions />} />
           <Route path="categories" element={<Categories />} />
           <Route path="reports" element={<Reports />} />
-          <Route path="budget" element={<Budget />} />
+          <Route path="budget/*" element={<BudgetRoutes />} />
           <Route path="profile" element={<Profile />} />
           <Route path="*" element={<Navigate to="/" />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+
         </Routes>
       </main>
     </div>

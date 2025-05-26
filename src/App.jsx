@@ -3,6 +3,11 @@ import LandingPage from './auth/LandingPage'
 import Login from './auth/Login'
 import Register from './auth/Register'
 import UserHome from './auth/UserHome'
+import BudgetList from './modules/budget/BudgetList'
+import BudgetSuivi from './modules/budget/BudgetSuivi'
+import BudgetAlert from './modules/budget/BudgetAlert'
+import Budget from './modules/budget/Budget'
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from 'react';
@@ -35,7 +40,9 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/home/*" element={<UserHome />} />
+        <Route path="/home/*" element={<UserHome />}>
+          <Route path="budget/*" element={<Budget />} />
+        </Route>
       </Routes>
     </Router>
   );
