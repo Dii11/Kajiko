@@ -1,4 +1,5 @@
 import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Données statiques de suivi pour démo
 const budgets = [
@@ -50,7 +51,13 @@ function getStatut(depense, montant) {
 
 export default function BudgetSuivi() {
 	return (
-		<div className="p-4">
+		<motion.div
+			initial={{ opacity: 0, y: 40 }}
+			animate={{ opacity: 1, y: 0 }}
+			exit={{ opacity: 0, y: -40 }}
+			transition={{ duration: 0.5, type: "spring", stiffness: 60 }}
+			className="p-4 bg-base-100 rounded-2xl"
+		>
 			<h2 className="text-xl font-bold mb-6">Suivi en temps réel des budgets</h2>
 			<div className="overflow-x-auto">
 				<table className="table table-zebra w-full">
@@ -67,45 +74,63 @@ export default function BudgetSuivi() {
 						</tr>
 					</thead>
 					<tbody>
-						{budgets.map((b) => {
-							const reste = b.montant - b.depense;
-							const ratio = Math.min(b.depense / b.montant, 1);
-							const statut = getStatut(b.depense, b.montant);
-							return (
-								<tr key={b.id}>
-									<td>{b.categorie}</td>
-									<td>{b.montant.toLocaleString()} Ar</td>
-									<td>{b.depense.toLocaleString()} Ar</td>
-									<td className={reste < 0 ? "text-error" : ""}>
-										{reste.toLocaleString()} Ar
-									</td>
-									<td>
-										<span className={`badge badge-${statut}`}>
-											{statut === "success" && "🟢 Sécurité"}
-											{statut === "warning" && "🟡 Limite"}
-											{statut === "error" && "🔴 Dépassé"}
-										</span>
-									</td>
-									<td>{b.periode}</td>
-									<td>{b.joursRestants} jours</td>
-									<td className="w-48">
-										<progress
-											className={`progress progress-${statut} w-full`}
-											value={Math.min((b.depense / b.montant) * 100, 100)}
-											max="100"
-										></progress>
-									</td>
-								</tr>
-							);
-						})}
+						<AnimatePresence>
+							{budgets.map((b) => {
+								const reste = b.montant - b.depense;
+								const statut = getStatut(b.depense, b.montant);
+								return (
+									<motion.tr
+										key={b.id}
+										initial={{ opacity: 0, y: 30 }}
+										animate={{ opacity: 1, y: 0 }}
+										exit={{ opacity: 0, y: 30 }}
+										transition={{ duration: 0.3 }}
+									>
+										<td>{b.categorie}</td>
+										<td>{b.montant.toLocaleString()} Ar</td>
+										<td>{b.depense.toLocaleString()} Ar</td>
+										<td className={reste < 0 ? "text-error" : ""}>
+											{reste.toLocaleString()} Ar
+										</td>
+										<td>
+											<span className={`badge badge-${statut}`}>
+												{statut === "success" && "🟢 Sécurité"}
+												{statut === "warning" && "🟡 Limite"}
+												{statut === "error" && "🔴 Dépassé"}
+											</span>
+										</td>
+										<td>{b.periode}</td>
+										<td>{b.joursRestants} jours</td>
+										<td className="w-48">
+											<progress
+												className={`progress progress-${statut} w-full`}
+												value={Math.min((b.depense / b.montant) * 100, 100)}
+												max="100"
+											></progress>
+										</td>
+									</motion.tr>
+								);
+							})}
+						</AnimatePresence>
 					</tbody>
 				</table>
 			</div>
 			{/* Détail des transactions (facultatif) */}
-			<div className="mt-8">
+			<motion.div
+				className="mt-8"
+				initial={{ opacity: 0, y: 40 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6, delay: 0.2 }}
+			>
 				<h3 className="font-semibold mb-2">Détail des transactions (exemple)</h3>
 				{budgets.map((b) => (
-					<div key={b.id} className="mb-4">
+					<motion.div
+						key={b.id}
+						className="mb-4"
+						initial={{ opacity: 0, x: -40 }}
+						animate={{ opacity: 1, x: 0 }}
+						transition={{ duration: 0.4, delay: 0.1 * b.id }}
+					>
 						<div className="font-bold">{b.categorie}</div>
 						<ul className="ml-4 list-disc">
 							{b.transactions.map((t) => (
@@ -114,9 +139,9 @@ export default function BudgetSuivi() {
 								</li>
 							))}
 						</ul>
-					</div>
+					</motion.div>
 				))}
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	);
 }

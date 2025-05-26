@@ -27,7 +27,7 @@ const navItems = [
 
 const BudgetHeader = () => {
   return (
-    <nav className="flex flex-wrap gap-4 mb-6">
+    <nav className="flex flex-wrap gap-4 mb-6 ml-8">
       {navItems.map((item) => (
         <NavLink
           key={item.key}
