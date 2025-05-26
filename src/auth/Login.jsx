@@ -41,7 +41,8 @@ const Login = () => {
               localStorage.setItem('token', response.data.token);
               setStatus({ success: 'Connexion réussie !' });
               setTimeout(() => {
-                navigate('/'); // Redirigez où vous voulez après connexion
+                navigate('/home'); // Redirigez où vous voulez après connexion
+depense-budget
               }, 1000);
             } catch (err) {
               setStatus({
