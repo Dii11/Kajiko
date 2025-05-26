@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import chart from "../assets/chart.png";
 import fond from "../assets/fond .webp";
 import save from "../assets/save.png";
@@ -41,11 +42,16 @@ const images = [
 ];
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col max-h-full gap-5 ">
-      <header className="  flex justify-between items-center  p-4">
+      <header className="flex justify-between items-center p-4">
         <img src={logo} className="" alt='logo' width={100}/>
-        <button className="bg-slate-950 px-3 py-2 rounded-2xl text-secondary text-md">
+        <button
+          className="bg-slate-950 px-3 py-2 rounded-2xl text-secondary text-md"
+          onClick={() => navigate('/login')}
+        >
           Se connecter
         </button>
       </header>

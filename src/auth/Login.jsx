@@ -24,9 +24,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-base-200">
-      <div className="w-full max-w-sm p-8 bg-base-100 rounded-2xl shadow-xl">
-        <h2 className="text-3xl font-bold text-center mb-6">Connexion</h2>
+    <div data-theme="fantasy" className="flex items-center bg-slate-950 justify-center min-h-screen ">
+      <div className="w-full max-w-sm p-8 rounded-2xl shadow-xl bg-slate-900">
+        <h2 className="text-3xl font-bold text-accent text-center mb-6">Connexion</h2>
         <Formik
           initialValues={{ email: '', password: '' }}
           validate={validate}
@@ -42,7 +42,6 @@ const Login = () => {
               setStatus({ success: 'Connexion réussie !' });
               setTimeout(() => {
                 navigate('/home'); // Redirigez où vous voulez après connexion
-depense-budget
               }, 1000);
             } catch (err) {
               setStatus({
@@ -69,8 +68,8 @@ depense-budget
                 <ErrorMessage name="email" component="div" className="text-error text-sm" />
               </div>
               <div>
-                <label className="label">
-                  <span className="label-text">Mot de passe</span>
+                <label className="label text-base-300">
+                  <span className="label-text text-base-300">Mot de passe</span>
                 </label>
                 <Field
                   type="password"
@@ -82,7 +81,7 @@ depense-budget
               </div>
               <button
                 type="submit"
-                className="btn btn-primary w-full"
+                className="btn btn-accent w-full"
                 disabled={isSubmitting}
               >
                 Se connecter
@@ -93,11 +92,11 @@ depense-budget
               {status && status.error && (
                 <div className="alert alert-error mt-4">{status.error}</div>
               )}
-              <div className="text-center mt-4">
+              <div className="text-center mt-4 text-base-300">
                 <span>Pas de compte ? </span>
                 <button
                   type="button"
-                  className="link link-primary"
+                  className="link link-secondary"
                   onClick={() => navigate('/register')}
                 >
                   Créer un compte
