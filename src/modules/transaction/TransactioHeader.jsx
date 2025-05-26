@@ -17,16 +17,16 @@ const TransactioHeader = () => {
     const solde = totalRevenus - totalDepenses;
 
     return (
-        <div className="flex flex-wrap gap-6 mb-6">
-            <div className="bg-error/10 border-l-4 border-error p-4 rounded-lg min-w-[180px]">
+        <div className="flex flex-wrap gap-6 mb-6 ml-8">
+            <div className="bg-error/10 border-l-4 border-error p-4 rounded-lg w-sm">
                 <div className="text-sm text-error font-semibold">💸 Total dépenses</div>
-                <div className="text-2xl font-bold">{totalDepenses.toLocaleString()} Ar</div>
+                <div className="text-2xl text-secondary font-bold">{totalDepenses.toLocaleString()} Ar</div>
             </div>
-            <div className="bg-success/10 border-l-4 border-success p-4 rounded-lg min-w-[180px]">
+            <div className="bg-success/10 border-l-4 border-success p-4 rounded-lg w-sm">
                 <div className="text-sm text-success font-semibold">💰 Total revenus</div>
-                <div className="text-2xl font-bold">{totalRevenus.toLocaleString()} Ar</div>
+                <div className="text-2xl text-accent font-bold">{totalRevenus.toLocaleString()} Ar</div>
             </div>
-            <div className="bg-info/10 border-l-4 border-info p-4 rounded-lg min-w-[180px]">
+            <div className="bg-info/10 border-l-4 border-info p-4 rounded-lg w-sm">
                 <div className="text-sm text-info font-semibold">🔄 Solde</div>
                 <div className={`text-2xl font-bold ${solde < 0 ? "text-error" : "text-info"}`}>
                     {solde.toLocaleString()} Ar

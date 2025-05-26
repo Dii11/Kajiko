@@ -5,6 +5,7 @@ import { fetchBudgets } from '../../features/budgetSlice';
 import { useNavigate } from 'react-router-dom'; // Ajout import
 import { Pie, Line } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
+import { motion } from "framer-motion";
 
 Chart.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -47,7 +48,7 @@ const DepensesParCategorie = ({ depensesParCategorie }) => {
     ],
   };
   return (
-    <div className="bg-base-100 rounded shadow p-4">
+    <div className="bg-base-100 rounded shadow p-4 w-150">
       <div className="font-semibold mb-2">📊 Dépenses par catégorie</div>
       {depensesParCategorie.length > 0 ? (
         <Pie data={data} />
@@ -253,7 +254,13 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -40 }}
+      transition={{ duration: 0.5, type: "spring", stiffness: 60 }}
+      className="space-y-6"
+    >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-success/10 border-l-4 border-success p-4 rounded-lg">
           <div className="text-sm text-success font-semibold">Total revenus (mois)</div>
@@ -282,7 +289,7 @@ const Dashboard = () => {
         <TopCategories topCategories={topCategories} />
         <TransactionsRecentes transactions={transactionsTriees} />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

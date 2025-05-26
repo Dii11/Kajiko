@@ -8,10 +8,10 @@ const DashboardHeader = ({
   depenses = "--"
 }) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 mx-4">
       <div>
-        <h1 className="text-2xl font-bold mb-1">Tableau de bord</h1>
-        <div className="text-sm text-gray-500">Aperçu global de vos finances</div>
+        <h1 className="text-2xl font-bold mb-1 text-accent">Tableau de bord</h1>
+        <div className="text-sm text-base-200">Aperçu global de vos finances</div>
       </div>
       <div className="flex items-center gap-2">
         <label className="text-sm font-medium">Période :</label>
