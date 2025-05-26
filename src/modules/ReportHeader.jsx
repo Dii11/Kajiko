@@ -3,8 +3,8 @@ import React from 'react';
 const ReportHeader = ({ totalDepensesMois, totalDepenses3Mois, categorieMax }) => (
   <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
     <div>
-      <h1 className="text-2xl font-bold mb-1">Rapports détaillés</h1>
-      <div className="text-sm text-gray-500">Analyse de vos dépenses et catégories</div>
+      <h1 className="text-2xl font-bold text-accent mb-1">Rapports détaillés</h1>
+      <div className="text-sm text-base-200">Analyse de vos dépenses et catégories</div>
     </div>
     <div className="flex gap-6">
       <div>

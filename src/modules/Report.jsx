@@ -1,22 +1,46 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Pie, Bar } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, BarElement } from 'chart.js';
-import ReportHeader from './ReportHeader';
+import { fetchTransactions } from '../features/transactionSlice'; // adapte le chemin si besoin
+import { motion, AnimatePresence } from 'framer-motion';
 
 Chart.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, BarElement);
 
 // Carte réutilisable avec graphique optionnel
-const InfoCard = ({ icon, title, value, color = "text-2xl font-bold", chart }) => (
-  <section className="bg-base-100 rounded shadow p-4 flex-1 min-w-[250px] max-w-xs flex flex-col items-center">
+const InfoCard = ({ icon, title, value, color = "text-2xl font-bold", chart, idx = 0 }) => (
+  <motion.section
+    className="bg-base-100 rounded shadow p-4 flex-1 min-w-[250px] max-w-xs flex flex-col items-center"
+    initial={{ opacity: 0, y: 40 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: 40 }}
+    transition={{ duration: 0.5, delay: idx * 0.1 }}
+  >
     <h2 className="font-bold text-lg mb-2">{icon} {title}</h2>
     <div className={color}>{value}</div>
     {chart && <div className="w-full mt-2">{chart}</div>}
-  </section>
+  </motion.section>
 );
 
 const Report = () => {
+  const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.list || []);
+  const status = useSelector((state) => state.transactions.status);
+
+  // Fetch transactions au montage si besoin
+  useEffect(() => {
+    if (status === "idle" || !transactions.length) {
+      dispatch(fetchTransactions());
+    }
+  }, [dispatch, status, transactions.length]);
+
+  // Affichage loading/erreur
+  if (status === "loading") {
+    return <div className="p-8 text-center text-lg">Chargement des rapports...</div>;
+  }
+  if (status === "failed") {
+    return <div className="p-8 text-center text-error">Erreur lors du chargement des transactions.</div>;
+  }
 
   // 1. Dépenses du mois courant
   const now = new Date();
@@ -78,10 +102,23 @@ const Report = () => {
   };
 
   return (
-    <div className="p-4 space-y-8">
-
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -40 }}
+      transition={{ duration: 0.5, type: "spring", stiffness: 60 }}
+      className="p-4 space-y-8"
+    >
       {/* Cartes principales en flex wrap avec graphiques */}
-      <div className="flex flex-wrap gap-4 mb-8">
+      <motion.div
+        className="flex flex-wrap gap-4 mb-8"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.15 } }
+        }}
+      >
         <InfoCard
           icon="💸"
           title="Dépenses ce mois-ci"
@@ -102,12 +139,14 @@ const Report = () => {
               />
             ) : null
           }
+          idx={0}
         />
         <InfoCard
           icon="📊"
           title="Dépenses sur 3 mois"
           value={`${totalDepenses3Mois.toLocaleString()} Ar`}
           color="text-2xl font-bold text-warning"
+          idx={1}
         />
         <InfoCard
           icon="🔥"
@@ -130,11 +169,17 @@ const Report = () => {
               />
             ) : null
           }
+          idx={2}
         />
-      </div>
+      </motion.div>
 
       {/* 2. Jours avec le plus de dépenses (détail) */}
-      <section className="bg-base-100 rounded shadow p-4">
+      <motion.section
+        className="bg-base-100 rounded shadow p-4"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <h2 className="font-bold text-lg mb-2">📅 Jours où j'ai le plus dépensé</h2>
         {jours.length > 0 ? (
           <>
@@ -156,10 +201,15 @@ const Report = () => {
         ) : (
           <div className="text-gray-400">Aucune donnée</div>
         )}
-      </section>
+      </motion.section>
 
       {/* 3. Catégorie qui a explosé ce mois (détail) */}
-      <section className="bg-base-100 rounded shadow p-4">
+      <motion.section
+        className="bg-base-100 rounded shadow p-4"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
         <h2 className="font-bold text-lg mb-2">🔥 Catégorie la plus dépensière ce mois</h2>
         {categories.length > 0 ? (
           <>
@@ -181,16 +231,21 @@ const Report = () => {
         ) : (
           <div className="text-gray-400">Aucune donnée</div>
         )}
-      </section>
+      </motion.section>
 
       {/* 5. Exporter les rapports */}
-      <section className="bg-base-100 rounded shadow p-4 flex items-center gap-4">
+      <motion.section
+        className="bg-base-100 rounded shadow p-4 flex items-center gap-4"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
         <h2 className="font-bold text-lg">📤 Exporter mes rapports</h2>
         <button className="btn btn-primary btn-sm" onClick={handleExport}>
           Exporter en CSV
         </button>
-      </section>
-    </div>
+      </motion.section>
+    </motion.div>
   );
 };
 
