@@ -7,7 +7,7 @@ import CategoriesHeader from '../modules/categories/CategoriesHeader';
 import TransactioHeader from '../modules/transaction/TransactioHeader';
 import DashboardHeader from '../modules/Dashboard/DashboardHeader';
 import ReportHeader from '../modules/ReportHeader';
-import img from '../assets/logo.webp'
+import img from '../assets/logo_1.png'
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -59,14 +59,14 @@ const Navbar = () => {
   // Déconnexion (à adapter selon ta logique)
   const handleLogout = () => {
     // ...logique de déconnexion (clear token, etc)...
-    navigate('/login');
+    navigate('/');
   };
 
   return (
     <div className="bg-slate-900 shadow-lg m-4 p-4 rounded-3xl ">
       <section className="flex justify-between rounded-lg m-4 p-5 text-secondary">
 <img src={img} alt='logo' width={100}/>
-        <div className="hidden md:block nav flex gap-10">
+        <div className="hidden md:block nav flex justify-around gap-20">
           <NavLink
             to="/home/"
             end
